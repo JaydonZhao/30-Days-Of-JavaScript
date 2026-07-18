@@ -117,9 +117,10 @@ console.log(word) // hello   ← 原串没变!
 word = word.toUpperCase() // 赋值回去才生效
 console.log(word) // HELLO
 
+// 想直接改某个字符?改不动 —— 字符串不可变
 let text = 'hello'
-text[0] = 'x'
-console.log(text)
+text[0] = 'x' // 非严格模式:这行被静默忽略;严格模式/ESM:直接抛 TypeError
+console.log(text) // hello   ← 没变!要改只能整串重新赋值(见上面第 8 组)
 
 // ═════ 轮到你 ═════
 
@@ -146,7 +147,7 @@ console.log(email.split('@'))
 
 // 练习 C:有 const raw = '  JavaScript  '(两端有空格)
 //   先去掉两端空格,再转成小写,最后打印。
-//   提示:两个方法可以【链式】连着写:raw.trim().toLowerCase()
+//   提示:去空格和转小写各有一个方法,两个可以【链式】连着写(前一个的结果接着点下一个)
 const raw = '  JavaScript  '
 console.log(raw.trim().toLowerCase())
 

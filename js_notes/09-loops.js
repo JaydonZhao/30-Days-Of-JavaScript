@@ -24,7 +24,7 @@
 //
 // ── 3. for...in:遍历对象的键 ────────────────────
 //   for (const key in obj)  →  key 依次是对象的每个键名
-//   注意:for...in 拿到的是【键】,要值得用 obj[key]
+//   注意:for...in 拿到的是【键】,要取值就用 obj[key]
 //
 //   ⚠️ 口诀:of 拿值(value),in 拿键/下标(index/key)
 //   ⚠️ 别用 for...in 遍历数组(会有意外的坑),数组用 for...of 或 for
