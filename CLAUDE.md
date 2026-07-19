@@ -23,12 +23,22 @@ Sessions are interactive tutoring: teach a topic, have them practice, review the
 
 ## `js_notes/` structure and conventions
 
-- Each topic is a folder with `notes.md` (concepts, human-read) and `practice.js`
-  (runnable code the user edits). `js_notes/README.md` is the index + progress map.
-- `js_notes/00-concepts/` holds cross-topic concepts (value-vs-reference, call
-  forms, bash-vs-js short-circuit) and **`my-mistakes.md`** — a running log of
-  mistakes the user has actually made, each with a `📍来源` back-reference to the
-  original exercise.
+- **One file per topic**, flat at the `js_notes/` root: `NN-topic.js` (e.g.
+  `09-loops.js`). Each file is self-contained "learn + practice + review" in three
+  labelled regions, in this order:
+  1. `// ═════ 概念总结 ═════` — concepts as comments (with aligned ASCII tables)
+  2. `// ═════ 示范 ═════` — runnable demo code, may carry expected-output comments
+  3. `// ═════ 轮到你 ═════` — exercises: requirements only, the user writes the code
+  `js_notes/README.md` is the index + progress map.
+- **History:** topics used to be `NN-topic/` folders holding `notes.md` +
+  `practice.js`; they were flattened into single `NN-topic.js` files. Some `📍来源`
+  links inside `my-mistakes.md` still point at the old `../NN-topic/practice.js`
+  paths — treat those as `../NN-topic.js` (fix a link only if you're already editing
+  that entry; don't do a blanket rewrite of the user's file).
+- `js_notes/00-concepts/` stays a **folder** of cross-topic `.md` notes
+  (value-vs-reference, call-forms, bash-vs-js short-circuit, semicolons-and-asi) plus
+  **`my-mistakes.md`** — a running log of mistakes the user has actually made, each in
+  错法→现象→正解→教训 format with a `📍来源` back-reference to the original exercise.
 
 **`js_notes/README.md` contains binding tutoring rules — read it before teaching.**
 The critical ones:
@@ -43,7 +53,34 @@ The critical ones:
   exercise regions must not.
 - **When the user makes a new mistake, absorb it into `00-concepts/my-mistakes.md`**
   (错法→现象→正解→教训 format, with a `📍来源` index) so it's recoverable on review.
+  But **only genuinely instructive mistakes** — a plain typo already covered by an
+  existing entry, or one the user already fixed with nothing new to learn, is not
+  worth a new entry (the user will push back if you log noise). When unsure, ask.
 - Update the progress checkboxes in `js_notes/README.md` when a topic is finished.
+
+### Leave learning traces when editing the user's code (user's standing request)
+
+Whenever the user asks you to change their code or add markers, **preserve the wrong
+version as a commented `❌ / ✅` contrast** right next to the fix — so future-them sees
+*what was wrong and why*, not just the corrected line. This is the same style the user
+already uses in `06-arrays.js` / `07-objects.js`:
+
+```js
+// ❌ splice 返回的是"被删除的元素",不是修改后的数组
+// console.log(q.splice(1, 0, 'second'))
+// ✅
+q.splice(1, 0, 'second')
+console.log(q)
+```
+
+Rules for these traces:
+- Comment out the wrong line (never leave broken code live), keep it **above** the fix.
+- One short `// ❌ 原因` line saying *why* it's wrong; `// ✅` marks the correct code.
+- This applies to **demo/teaching regions and to fixes the user explicitly asks for** —
+  it does **not** override "never write answers": still don't drop solutions into an
+  untouched `轮到你` exercise the user hasn't attempted.
+- A substantial new trap that emerges this way should usually also get a
+  `my-mistakes.md` entry (subject to the "instructive only" bar above).
 
 ## Running code
 
@@ -51,7 +88,8 @@ There is **no build system, package.json, linter, or test suite** — this is a
 learning repo, not an application. Code is run one file at a time:
 
 ```bash
-node js_notes/06-arrays/practice.js    # run a single practice file
+node js_notes/06-arrays.js       # run a single topic file
+node --check js_notes/09-loops.js  # syntax-check only, no execution
 ```
 
 Inside the editor the user also runs files via **Quokka.js** (live `console.log`
@@ -67,3 +105,15 @@ under Node throws (e.g. `firstName is not defined`, `document is not defined`).
 
 Prose, notes, and explanations are in **Chinese**; code, identifiers, and commit
 messages in English. Commit messages follow Angular style (`<type>(scope): description`).
+
+## Git remotes
+
+This clone was forked away from the original course:
+
+- `origin` → `github.com/JaydonZhao/30-Days-Of-JavaScript` (the user's fork; **push here**)
+- `upstream` → `github.com/Asabeneh/30-Days-Of-JavaScript` (original author; pull tutorial
+  updates with `git fetch upstream && git merge upstream/master` — merge, not rebase)
+
+Work happens on `master` directly (the fork's `master` is independent of upstream's, so
+the user's commits never touch anyone else's repo). The fork is **public** — don't commit
+anything private.
