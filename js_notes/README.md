@@ -53,25 +53,36 @@
 - [x] `07-objects` 对象
 - [x] `08-sets-maps` Set 与 Map
 
-### 三、逻辑与函数
+> 🎯 **本路线已为目标「用 pi 搭 agent + 读懂 pi 关键源码」做过适配**:
+> 异步大幅提前(agent 命脉)、新增模块与 TS 专题、前端相关暂缓。原教程的
+> day 顺序仅作参考。
+
+### 三、逻辑与函数(pi 前置 · 核心)
 - [x] `09-loops` 循环
-- [ ] `10-functions` 函数
-- [ ] `11-higher-order-functions` 高阶函数(map / filter / reduce)
-- [ ] `12-destructuring-spread` 解构与展开
-- [ ] `13-closures` 闭包
+- [ ] `10-functions` 函数(声明/表达式、箭头、参数、返回、作用域)
+- [ ] `11-higher-order-functions` 高阶函数 + 回调(map / filter / reduce)← 读 TS 必备
+- [ ] `12-destructuring-spread` 解构与展开 ← pi 源码里到处是,读代码前置
+- [ ] `13-closures` 闭包(理解 agent 状态、回调捕获)
 
-### 四、进阶
-- [ ] `14-classes` 类
-- [ ] `15-regex` 正则表达式
-- [ ] `16-error-handling` 错误处理
-- [ ] `17-json` JSON
-- [ ] `18-promises-async` 异步(Promise / async-await)
+### 四、异步与工程结构(agent 的命脉)⭐
+- [ ] `14-modules` 模块 import / export ← 新增:monorepo/多包的地基
+- [ ] `15-promises-async` 异步 Promise / async-await ← 从原第18提前!每个 LLM 调用都是异步
+- [ ] `16-error-handling` 错误处理 try/catch ← 和 await 搭配
+- [ ] `17-classes` 类 class ← agent 运行时/状态管理常用
+- [ ] `18-json` JSON ← LLM 的输入输出、tool calling 都是 JSON
 
-### 五、浏览器与项目
-- [ ] `19-dom` DOM 操作
-- [ ] `20-events` 事件监听
-- [ ] `21-web-storage` 本地存储
-- [ ] `22-projects` 综合项目
+### 五、TypeScript(看懂 pi 的门票)⭐
+- [ ] `19-ts-basics` TS 基础:为什么要类型、类型标注、`interface` / `type`
+- [ ] `20-ts-generics` 泛型 `<T>`、联合类型、如何读懂函数签名
+- [ ] `21-ts-project` 工程:模块类型、`tsconfig`、怎么读 `.d.ts` 和别人的类型
+
+### 六、Agent 领域 + pi 实战
+- [ ] `22-agent-concepts` 领域概念:LLM API、tool calling、agent loop 是什么
+- [ ] `23-pi-hello` 用 pi 搭一个最小可跑的 agent
+- [ ] `24-pi-source-reading` 精读 pi 源码(挑软柿子,逐行带读,不求全懂)
+
+### 附:暂缓(和 pi 无关,想做前端再回来)
+- 正则表达式 / DOM 操作 / 事件监听 / Web Storage / 综合前端项目
 
 ---
 
