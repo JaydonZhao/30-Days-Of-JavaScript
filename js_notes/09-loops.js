@@ -96,22 +96,62 @@ for (let i = 0; i < 5; i++) {
 // (只给要求,自己写代码)
 
 // 练习 A:用 for 循环打印 1 到 5(注意:是 1 到 5,不是 0 到 4)
+for (let i = 1; i <= 5; i++) {
+  console.log(i)
+}
+
+
 
 // 练习 B:有 const nums = [4, 7, 2, 9]
 //   用 for...of 遍历,把每个数字打印出来
+const nums = [4, 7, 2, 9]
+for (const num of nums) {
+  console.log(num)
+}
 
 // 练习 C:有 const car = { brand: 'Tesla', year: 2024, color: 'red' }
 //   用 for...in 遍历,按 "键: 值" 的格式打印每一项
 //   (例如 brand: Tesla)
+const car = { brand: 'Tesla', year: 2024, color: 'red' }
+for (const i in car) {
+  console.log(`${i}` + ": " + car[i]) // ✅
+  console.log(i + ": ", car[i]) // ❌
+  console.log(i + ":", car[i]) // ✅
+}
+
+
 
 // 练习 D:用 for 循环算出 1 + 2 + 3 + ... + 100 的总和,打印结果
 //   提示:在循环外先定义一个 let sum = 0,每轮把 i 加进去
 //   (答案应该是 5050)
+let sum = 0
+for (let i = 1; i <= 100; i++) {
+  sum += i
+}
+console.log(sum)
+
+
 
 // 练习 E(动脑):有 const nums = [3, 8, 1, 10, 5]
 //   用循环找出里面【最大】的数并打印。
 //   提示:先假设第一个是最大(let max = nums[0]),
 //   遍历时遇到更大的就更新 max。
+const nums_ = [3, 8, 1, 10, 5]
+let max = nums_[0]
+for (const num of nums_) {
+  max = num > max? num : max
+}
+console.log(max)
+
+
 
 // 练习 F(挑战):打印 1 到 20,但遇到偶数就跳过(用 continue),
 //   只打印奇数。
+for (let i = 1; i <= 20; i+=1) {
+  if (i % 2 == 0) // ❌
+  if (i % 2 === 0) // ✅
+  
+    continue    // ❌
+    {continue}    // ✅
+  console.log(i)
+}

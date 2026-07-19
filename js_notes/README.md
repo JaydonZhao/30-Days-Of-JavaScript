@@ -39,6 +39,7 @@
 - `00-concepts/call-forms.md` —— 三种调用形式:`值.方法()` vs `函数()` vs `类.方法()`
 - `00-concepts/value-vs-reference.md` —— 值 vs 引用:复制 vs 共享、字符串不可变 ⭐
 - `00-concepts/shortcircuit-bash-vs-js.md` —— `&&`/`||`:bash vs JS(`0` 真假相反)
+- `00-concepts/semicolons-and-asi.md` —— 分号 `;` 什么时候【必须】写(ASI 的坑:行首 `(`/`[`、`return` 换行)⭐
 
 ### 一、基础与数据
 - [x] `01-basics` 基础:输出、注释、表达式、字符串引号、运行方式
