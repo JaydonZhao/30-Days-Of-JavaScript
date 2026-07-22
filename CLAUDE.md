@@ -1,69 +1,64 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+本文件为 Claude Code (claude.ai/code) 在本仓库中工作时提供指引。
 
-## What this repository actually is
+## 这个仓库到底是什么
 
-Two layers coexist here:
+这里并存着两层内容:
 
-1. **The upstream tutorial** — `NN_Day_*` folders (e.g. `01_Day_Introduction`,
-   `23_Day_Event_listeners`) plus language translation folders (`Korea/`, `RU/`,
-   `Spanish/`, …). This is Asabeneh's "30 Days Of JavaScript" course, cloned as
-   read-only reference material. **Do not modify or "fix" these files** — errors in
-   them (e.g. `main.js` relying on variables from a separately-loaded `variable.js`)
-   are intentional teaching artifacts, not bugs.
+1. **上游教程** —— `NN_Day_*` 文件夹(例如 `01_Day_Introduction`、
+   `23_Day_Event_listeners`),以及各语言翻译文件夹(`Korea/`、`RU/`、
+   `Spanish/`……)。这是 Asabeneh 的 "30 Days Of JavaScript" 课程,作为**只读**
+   参考资料克隆进来。**不要修改或"修复"这些文件** —— 其中的错误(例如 `main.js`
+   依赖另一个单独加载的 `variable.js` 里的变量)是刻意为之的教学产物,不是 bug。
 
-2. **`js_notes/`** — the user's own learning journal and the **active workspace**.
-   Nearly all real work happens here. It is organized **by knowledge topic, not by
-   day** (`01-basics`, `02-variables`, … `07-objects`, …), because the numbering
-   reflects the user's learning order, not the tutorial's day numbers.
+2. **`js_notes/`** —— 用户自己的学习笔记,也是**活跃工作区**。
+   几乎所有真正的工作都发生在这里。它**按知识主题组织,而非按天**
+   (`01-basics`、`02-variables`、……`07-objects`……),因为这个编号反映的是
+   用户的学习顺序,而不是教程的天数。
 
-The user is a **beginner learning JavaScript** (with some Python/Linux background).
-Sessions are interactive tutoring: teach a topic, have them practice, review their code.
+用户是**正在入门 JavaScript 的初学者**(有一些 Python/Linux 背景)。
+每次会话都是交互式辅导:讲一个主题、让用户练习、复审他的代码。
 
-## `js_notes/` structure and conventions
+## `js_notes/` 的结构与约定
 
-- **One file per topic**, flat at the `js_notes/` root: `NN-topic.js` (e.g.
-  `09-loops.js`). Each file is self-contained "learn + practice + review" in three
-  labelled regions, in this order:
-  1. `// ═════ 概念总结 ═════` — concepts as comments (with aligned ASCII tables)
-  2. `// ═════ 示范 ═════` — runnable demo code, may carry expected-output comments
-  3. `// ═════ 轮到你 ═════` — exercises: requirements only, the user writes the code
-  `js_notes/README.md` is the index + progress map.
-- **History:** topics used to be `NN-topic/` folders holding `notes.md` +
-  `practice.js`; they were flattened into single `NN-topic.js` files. Some `📍来源`
-  links inside `my-mistakes.md` still point at the old `../NN-topic/practice.js`
-  paths — treat those as `../NN-topic.js` (fix a link only if you're already editing
-  that entry; don't do a blanket rewrite of the user's file).
-- `js_notes/00-concepts/` stays a **folder** of cross-topic `.md` notes
-  (value-vs-reference, call-forms, bash-vs-js short-circuit, semicolons-and-asi) plus
-  **`my-mistakes.md`** — a running log of mistakes the user has actually made, each in
-  错法→现象→正解→教训 format with a `📍来源` back-reference to the original exercise.
+- **一个主题一个文件**,平铺在 `js_notes/` 根目录:`NN-topic.js`(例如
+  `09-loops.js`)。每个文件都自成一体,包含"学习 + 练习 + 复习",分为三个
+  带标签的区块,顺序如下:
+  1. `// ═════ 概念总结 ═════` —— 以注释形式呈现概念(含对齐的 ASCII 表格)
+  2. `// ═════ 示范 ═════` —— 可运行的演示代码,可带预期输出注释
+  3. `// ═════ 轮到你 ═════` —— 练习:只给要求,由用户自己写代码
+  `js_notes/README.md` 是索引 + 进度地图。
+- **历史沿革:** 主题过去是 `NN-topic/` 文件夹,里面放 `notes.md` +
+  `practice.js`;后来被扁平化为单个 `NN-topic.js` 文件。`my-mistakes.md` 里有些
+  `📍来源` 链接仍指向旧的 `../NN-topic/practice.js` 路径 —— 请把它们视作
+  `../NN-topic.js`(只在你本来就在编辑那条条目时才顺手修链接;不要对用户的文件
+  做一次性的全量重写)。
+- `js_notes/00-concepts/` 保持为一个**文件夹**,存放跨主题的 `.md` 笔记
+  (值 vs 引用、调用形式、bash-vs-js 短路、分号与 ASI),外加
+  **`my-mistakes.md`** —— 一份用户实际犯过的错误的滚动记录,每条采用
+  错法→现象→正解→教训 格式,并带一个指回原练习的 `📍来源` 反向引用。
 
-**`js_notes/README.md` contains binding tutoring rules — read it before teaching.**
-The critical ones:
+**`js_notes/README.md` 含有具有约束力的辅导规则 —— 教学前先读它。**
+其中最关键的几条:
 
-- **Never write answers for the user.** In practice files, the "轮到你" (your turn)
-  region gets only requirements — no solutions, not even commented-out ones (that
-  spoils it). Hints point at direction only ("these two methods can chain"), never a
-  full line like `raw.trim().toLowerCase()`.
-- **Let the user fix their own code.** Point out what's wrong and why; don't edit
-  their exercise answers for them.
-- Demonstration regions (teaching examples) may include expected output as comments;
-  exercise regions must not.
-- **When the user makes a new mistake, absorb it into `00-concepts/my-mistakes.md`**
-  (错法→现象→正解→教训 format, with a `📍来源` index) so it's recoverable on review.
-  But **only genuinely instructive mistakes** — a plain typo already covered by an
-  existing entry, or one the user already fixed with nothing new to learn, is not
-  worth a new entry (the user will push back if you log noise). When unsure, ask.
-- Update the progress checkboxes in `js_notes/README.md` when a topic is finished.
+- **绝不替用户写答案。** 在练习文件里,"轮到你"区块只给要求 —— 不给解答,
+  连注释掉的解答也不行(那会破坏练习)。提示只指方向("这两个方法可以链式
+  调用"),绝不给出完整的一整行,比如 `raw.trim().toLowerCase()`。
+- **让用户自己修自己的代码。** 指出哪里错了、为什么错;不要替他改练习答案。
+- 演示区块(教学示例)可以用注释写出预期输出;练习区块不可以。
+- **当用户犯了新错误时,把它吸收进 `00-concepts/my-mistakes.md`**
+  (错法→现象→正解→教训 格式,带 `📍来源` 索引),这样复习时可追溯。
+  但**只记真正有教益的错误** —— 已被现有条目覆盖的纯手误,或用户已经自己
+  修好、没有新东西可学的错误,不值得新开一条(记流水账的话用户会反驳)。
+  拿不准时,问一下。
+- 一个主题完成后,更新 `js_notes/README.md` 里的进度勾选框。
 
-### Leave learning traces when editing the user's code (user's standing request)
+### 改用户代码时留下学习痕迹(用户的长期要求)
 
-Whenever the user asks you to change their code or add markers, **preserve the wrong
-version as a commented `❌ / ✅` contrast** right next to the fix — so future-them sees
-*what was wrong and why*, not just the corrected line. This is the same style the user
-already uses in `06-arrays.js` / `07-objects.js`:
+每当用户让你改他的代码或加标记时,**把错误版本作为注释掉的 `❌ / ✅` 对照
+保留**在修复的旁边 —— 好让未来的他看到*错在哪、为什么错*,而不仅仅是改对后的
+那一行。这与用户已经在 `06-arrays.js` / `07-objects.js` 里用的风格一致:
 
 ```js
 // ❌ splice 返回的是"被删除的元素",不是修改后的数组
@@ -73,77 +68,72 @@ q.splice(1, 0, 'second')
 console.log(q)
 ```
 
-Rules for these traces:
-- Comment out the wrong line (never leave broken code live), keep it **above** the fix.
-- One short `// ❌ 原因` line saying *why* it's wrong; `// ✅` marks the correct code.
-- This applies to **demo/teaching regions and to fixes the user explicitly asks for** —
-  it does **not** override "never write answers": still don't drop solutions into an
-  untouched `轮到你` exercise the user hasn't attempted.
-- A substantial new trap that emerges this way should usually also get a
-  `my-mistakes.md` entry (subject to the "instructive only" bar above).
+这类痕迹的规则:
+- 把错误行注释掉(绝不留下能跑的坏代码),放在修复的**上方**。
+- 一行简短的 `// ❌ 原因` 说明*为什么*错;`// ✅` 标出正确的代码。
+- 这适用于**演示/教学区块,以及用户明确要求的修复** ——
+  它**不**推翻"绝不写答案":对于用户还没动手的 `轮到你` 练习,仍然不要
+  往里丢解答。
+- 由此浮现出的、有分量的新陷阱,通常也应加一条 `my-mistakes.md` 条目
+  (以上文"只记有教益的"这条为准)。
 
-### Explain the *why*, not just the rule (user's standing request)
+### 讲清*为什么*,而不只是规则(用户的长期要求)
 
-The user learns far faster from the underlying mechanism than from a bare
-"that's just how it is." Terse rule-only notes are not enough — the user
-explicitly flagged `// 带 {} 就得自己写 return` as 晦涩 (opaque). When a rule
-has a reason, **lead with the reason**; once the mechanism is clear the rule
-becomes self-evident (and often several rules collapse into one cause).
+比起干巴巴的"就是这么规定的",用户从底层机制里学得快得多。只给规则、
+不给原因的简略笔记是不够的 —— 用户明确指出 `// 带 {} 就得自己写 return`
+太晦涩。当一条规则有其原因时,**先讲原因**;机制一旦讲清,规则就不言自明
+(而且往往好几条规则会归结到同一个原因)。
 
-Worked example — arrow-function body & `return`. Lead with the **anchor
-sentence**, then let everything fall out as consequences (finding the right
-anchor is the skill — the user corrected an earlier draft that started from
-`{`'s two identities instead of from the anchor):
-- **Anchor: the right side of `=>` expects an *expression*** (something that
-  evaluates to a value).
-- Give it an expression → that *is* the value → JS returns it (implicit return).
-  `return` there is illegal: `return` is a *statement*, not an expression, so
-  `(a, b) => return a + b` is a `SyntaxError`.
-- `{ ... }` is the escape hatch: starting the body with `{` makes JS treat it as
-  a *statement block*, which produces no value → you must `return` explicitly,
-  else `undefined`.
-- Corollary from the same anchor: an object literal also starts with `{`, so it
-  collides with the block rule → wrap in parens to force expression context:
-  `(x) => ({ name: x })`.
+举例说明 —— 箭头函数的函数体与 `return`。先给出**锚点句**,再让一切作为
+其推论自然而然地推出(找到对的锚点才是本事 —— 用户曾修正过一版从 `{`
+的两种身份出发、而非从锚点出发的草稿):
+- **锚点:`=>` 的右侧期待一个*表达式***(某个求值后得到一个值的东西)。
+- 给它一个表达式 → 那*就是*那个值 → JS 把它返回(隐式返回)。
+  在那里写 `return` 是非法的:`return` 是*语句*,不是表达式,所以
+  `(a, b) => return a + b` 会 `SyntaxError`。
+- `{ ... }` 是逃生舱:以 `{` 开头的函数体会让 JS 把它当作*语句块*,
+  语句块不产生值 → 你必须显式 `return`,否则得到 `undefined`。
+- 由同一锚点得出的推论:对象字面量也以 `{` 开头,于是和语句块规则冲突 →
+  用括号包起来以强制进入表达式上下文:`(x) => ({ name: x })`。
 
-Practical habits this implies:
-- Prefer "X **because** the parser/engine sees Y" over "always do X."
-- **Verify by running code** when it sharpens the point — the user values seeing
-  the actual error message or output over an assertion (e.g. `node --check` to
-  show a real `SyntaxError`).
+由此得出的实操习惯:
+- 优先说"X **因为**解析器/引擎看到了 Y",而不是"总是这样做 X"。
+- **用运行代码来验证**,当它能让论点更锋利时 —— 用户看重看到真实的报错
+  信息或输出,胜过一句断言(例如用 `node --check` 显示一个真实的
+  `SyntaxError`)。
 
-## Running code
+## 运行代码
 
-There is **no build system, package.json, linter, or test suite** — this is a
-learning repo, not an application. Code is run one file at a time:
+这里**没有构建系统、没有 package.json、没有 linter、没有测试套件** ——
+这是一个学习仓库,不是一个应用。代码逐个文件运行:
 
 ```bash
-node js_notes/06-arrays.js       # run a single topic file
-node --check js_notes/09-loops.js  # syntax-check only, no execution
+node js_notes/06-arrays.js       # 运行单个主题文件
+node --check js_notes/09-loops.js  # 只做语法检查,不执行
 ```
 
-Inside the editor the user also runs files via **Quokka.js** (live `console.log`
-values inline; free edition — no `//?` live-comments) or **Code Runner** (▷ button).
+在编辑器里,用户也会用 **Quokka.js**(内联显示实时 `console.log` 值;免费版 ——
+不支持 `//?` 实时注释)或 **Code Runner**(▷ 按钮)来运行文件。
 
-**Self-contained vs browser files:** a `.js` file that defines everything it uses and
-touches no `document` can run under Node/Quokka/Code Runner. Files that depend on
-variables from another script, or use `document`/DOM (day 21+ and the mini-projects),
-must be opened via their `index.html` in a browser with the F12 console — running them
-under Node throws (e.g. `firstName is not defined`, `document is not defined`).
+**自足文件 vs 浏览器文件:** 一个 `.js` 文件如果自己定义了它用到的一切、
+且不碰 `document`,就能在 Node/Quokka/Code Runner 下运行。而依赖另一个脚本里
+变量的文件,或使用 `document`/DOM 的文件(第 21 天以后以及那些小项目),
+必须通过它们的 `index.html` 在浏览器里打开、配合 F12 控制台 —— 在 Node 下
+运行会抛错(例如 `firstName is not defined`、`document is not defined`)。
 
-## Content language
+## 内容语言
 
-Prose, notes, and explanations are in **Chinese**; code, identifiers, and commit
-messages in English. Commit messages follow Angular style (`<type>(scope): description`).
+散文、笔记、讲解用**中文**;代码、标识符、commit message 用英文。
+Commit message 遵循 Angular 风格(`<type>(scope): description`)。
 
-## Git remotes
+## Git 远端
 
-This clone was forked away from the original course:
+这个克隆是从原课程 fork 出来的:
 
-- `origin` → `github.com/JaydonZhao/30-Days-Of-JavaScript` (the user's fork; **push here**)
-- `upstream` → `github.com/Asabeneh/30-Days-Of-JavaScript` (original author; pull tutorial
-  updates with `git fetch upstream && git merge upstream/master` — merge, not rebase)
+- `origin` → `github.com/JaydonZhao/30-Days-Of-JavaScript`(用户的 fork;**推到这里**)
+- `upstream` → `github.com/Asabeneh/30-Days-Of-JavaScript`(原作者;拉取教程更新用
+  `git fetch upstream && git merge upstream/master` —— 用 merge,不用 rebase)
 
-Work happens on `master` directly (the fork's `master` is independent of upstream's, so
-the user's commits never touch anyone else's repo). The fork is **public** — don't commit
-anything private.
+工作直接发生在 `master` 上(这个 fork 的 `master` 独立于 upstream 的,所以
+用户的提交永远不会碰到别人的仓库)。这个 fork 是**公开的** —— 不要提交任何
+私密内容。
