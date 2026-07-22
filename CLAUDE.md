@@ -82,6 +82,36 @@ Rules for these traces:
 - A substantial new trap that emerges this way should usually also get a
   `my-mistakes.md` entry (subject to the "instructive only" bar above).
 
+### Explain the *why*, not just the rule (user's standing request)
+
+The user learns far faster from the underlying mechanism than from a bare
+"that's just how it is." Terse rule-only notes are not enough — the user
+explicitly flagged `// 带 {} 就得自己写 return` as 晦涩 (opaque). When a rule
+has a reason, **lead with the reason**; once the mechanism is clear the rule
+becomes self-evident (and often several rules collapse into one cause).
+
+Worked example — arrow-function body & `return`. Lead with the **anchor
+sentence**, then let everything fall out as consequences (finding the right
+anchor is the skill — the user corrected an earlier draft that started from
+`{`'s two identities instead of from the anchor):
+- **Anchor: the right side of `=>` expects an *expression*** (something that
+  evaluates to a value).
+- Give it an expression → that *is* the value → JS returns it (implicit return).
+  `return` there is illegal: `return` is a *statement*, not an expression, so
+  `(a, b) => return a + b` is a `SyntaxError`.
+- `{ ... }` is the escape hatch: starting the body with `{` makes JS treat it as
+  a *statement block*, which produces no value → you must `return` explicitly,
+  else `undefined`.
+- Corollary from the same anchor: an object literal also starts with `{`, so it
+  collides with the block rule → wrap in parens to force expression context:
+  `(x) => ({ name: x })`.
+
+Practical habits this implies:
+- Prefer "X **because** the parser/engine sees Y" over "always do X."
+- **Verify by running code** when it sharpens the point — the user values seeing
+  the actual error message or output over an assertion (e.g. `node --check` to
+  show a real `SyntaxError`).
+
 ## Running code
 
 There is **no build system, package.json, linter, or test suite** — this is a
