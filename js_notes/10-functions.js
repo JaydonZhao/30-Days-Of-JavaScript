@@ -1,0 +1,179 @@
+// 10 · 函数(Functions)
+// 学练复习一体:概念总结 → 示范 → 轮到你
+// 跑法:Quokka / 右上角 ▷ / node js_notes/10-functions.js
+// 示范区带预期输出;轮到你区只给要求,自己写
+//
+// ═════════════════════ 概念总结 ═════════════════════
+//
+// 函数 = 把一段"要重复用的逻辑"打包起来,起个名字,以后一句话就能调用。
+// 它是编程从"流水账"走向"可复用、可组合"的关键。后面的异步、高阶函数、
+// 类、agent 循环,全都建立在函数之上 —— 这章是地基中的地基。
+//
+// ── 1. 两种写法:声明 vs 表达式 ⭐ ────────────────
+//   // (a) 函数声明(declaration)
+//   function add(a, b) {
+//     return a + b
+//   }
+//   // (b) 函数表达式(expression)—— 把函数当"值"存进变量
+//   const add = function (a, b) {
+//     return a + b
+//   }
+//   区别(初学先记一条):声明会被"提升"(hoisting),定义前就能调用;
+//   表达式不会,必须先定义后调用。现代代码更常用【表达式 + 箭头函数】。
+//
+// ── 2. 箭头函数 => ⭐⭐(pi/TS 代码里到处是)────────
+//   const add = (a, b) => a + b             // 无 {}:自动 return
+//   const add = (a, b) => { return a + b }  // 有 {}:必须自己 return
+//   const square = (n) => n * n
+//   const hi = () => 'hi'                    // 没参数也要写空括号 ()
+//
+//   起点(记住这一句,其余都是推论):
+//   ⭐⭐ => 右边【期望一个表达式】—— 即"能算出一个值的东西"(a+b、n*n、'hi' 都是)。
+//     • 你给它一个表达式 → 它就是那个值 → JS 直接把这个值 return 出去(这叫"隐式返回")
+//     • 所以此处 return 不但多余,而且【非法】:return 是【语句】不是表达式,
+//       放在"要表达式的位置"→ 直接语法报错:
+//         const add = (a, b) => return a + b   // ❌ SyntaxError(这里要表达式,return 是语句)
+//
+//   那要写多行逻辑呢?→ { } 是【逃生舱】:
+//     一旦 => 右边以 { 开头,JS 特判它为【函数体代码块】(装语句的地方),不再当表达式看。
+//     代码块只是"一堆动作",本身不产出值 → JS 不猜你要交啥 → 必须自己 return,否则返回 undefined。
+//   一句话:=> 后给"值(表达式)"就自动还;开了"{代码块}"就得自己 return。
+//
+//   ⚠️ 推论(同一锚点):对象字面量 { } 也以 { 开头 → 会撞上"代码块"这条特判!
+//     想直接返回对象,用 () 裹住,强行回到"表达式"语境:
+//       const make = (name) => { name: name }    // ❌ { 被当代码块 → 返回 undefined
+//       const make = (name) => ({ name: name })  // ✅ () 逼它当表达式 → 返回对象
+//     为什么 ❌ 那行不【报错】只是静默 undefined?因为 { 当代码块后,里面 `name:`
+//     被当成【标签语句】(JS 给循环起名字的老语法,形如 `outer:`,见 09 章),
+//     语法完全合法 → 不报错却啥也没返回。这种"静默 undefined"最难查。
+//   ⚠️ 单个参数可省括号(n => n*n),但 0 个或 ≥2 个必须带括号。
+//   ⚠️ 箭头函数没有自己的 this(复习 07 章坑 L:对象方法别用箭头)。
+//
+// ── 3. 参数 vs 实参、默认参数 ────────────────────
+//   function greet(name) { ... }   // name 是"形参"(占位)
+//   greet('Tom')                   // 'Tom' 是"实参"(真值)
+//   function greet(name = '游客') { ... }  // 默认参数:没传就用默认值
+//     greet()      // name = '游客'
+//     greet('Tom') // name = 'Tom'
+//
+// ── 4. return:把结果"交出来" ⭐ ──────────────────
+//   - return 后面的值就是"函数调用的结果",可以接住:const r = add(1,2)
+//   - 函数没写 return → 返回 undefined(常见坑:算了但没交出来)
+//   - return 一执行,函数【立刻结束】,后面的代码不再跑
+//   ⚠️ return 后面别换行!(复习分号笔记坑2:return 换行会被强行补 ; 返回 undefined)
+//
+// ── 5. 作用域 scope:变量的"可见范围"⭐ ───────────
+//   - 函数里 let/const 声明的变量,只在函数内可见(出了函数就不存在)
+//   - 里面能看到外面(外层变量),外面看不到里面(封装)
+//   - {} 块级作用域:let/const 只在那对花括号内有效
+//     function f() { const secret = 1 }
+//     console.log(secret) // ❌ ReferenceError:出了函数就看不见
+//
+// ── 6. 函数是"一等公民":能当值传来传去 ⭐⭐ ───────
+//   函数本身也是一种值,可以:存进变量、当参数传给别的函数、被返回。
+//   把"函数当参数传进去"的那个函数,就叫【高阶函数】(下一章专讲):
+//     [1,2,3].map(n => n * 2)   // 把箭头函数传给 map
+//   💡 这正是 agent/pi 的核心套路:注册一堆"工具函数",框架在合适时机回调它们。
+//
+// ═════ 要点回顾 ═════
+// 1. 两种写法:function 声明(会提升)/ const = function 表达式(不提升)
+// 2. 箭头函数 (a,b) => a+b:单表达式自动 return;没自己的 this ⭐⭐
+// 3. 默认参数 name = '游客':没传就用默认
+// 4. return 交出结果;不写 return 得 undefined;return 后别换行 ⭐
+// 5. 作用域:里能看外,外看不到里;let/const 是块级 ⭐
+// 6. 函数能当值传递 → 回调 / 高阶函数(下一章)⭐⭐
+//
+// ═════════════════════ 示范 ═════════════════════
+
+// ── 1. 函数声明 ──────────────────────────────────
+function add(a, b) {
+  return a + b
+}
+console.log(add(2, 3)) // 5
+
+// ── 2. 函数表达式(把函数存进变量)────────────────
+const multiply = function (a, b) {
+  return a * b
+}
+console.log(multiply(4, 5)) // 20
+
+// ── 3. 箭头函数:三种写法,越来越短 ⭐ ─────────────
+const addArrow1 = (a, b) => {
+  return a + b // 带 {} 要自己写 return
+}
+const addArrow2 = (a, b) => a + b // 单表达式:自动 return
+const square = (n) => n * n // 单参数,可省外层括号(这里保留更清晰)
+const sayHi = () => 'hi' // 无参数:空括号不能省
+console.log(addArrow1(1, 2)) // 3
+console.log(addArrow2(1, 2)) // 3
+console.log(square(5)) // 25
+console.log(sayHi()) // hi
+
+// ── 4. 默认参数 ──────────────────────────────────
+const greet = (name = '游客') => `你好, ${name}`
+console.log(greet()) // 你好, 游客   ← 没传,用默认
+console.log(greet('Tom')) // 你好, Tom    ← 传了,用传的
+
+// ── 4.5 箭头返回对象:{ 的两种身份(呼应概念 2)⭐ ──
+const makeBad = (name) => { name: name } // { 被当"代码块",不是对象
+console.log(makeBad('Tom')) // undefined   ← 坑!啥都没返回
+const makeGood = (name) => ({ name: name }) // () 强制当"值" → 真的返回对象
+console.log(makeGood('Tom')) // { name: 'Tom' }
+
+// ── 5. return 交出结果;不写 return → undefined ⭐ ─
+const noReturn = (x) => {
+  x * 2 // 算了,但没 return 出来
+}
+console.log(noReturn(10)) // undefined  ← 没交出来!
+
+// return 一执行,函数立刻结束
+const firstPositive = (a, b) => {
+  if (a > 0) return a // a 是正数就直接返回,下面不再跑
+  return b
+}
+console.log(firstPositive(5, 9)) // 5
+console.log(firstPositive(-1, 9)) // 9
+
+// ── 6. 作用域:里能看外,外看不到里 ⭐ ─────────────
+const outer = 'I am outside'
+const showScope = () => {
+  const inner = 'I am inside'
+  console.log(outer) // I am outside  ← 里面能看到外面
+  console.log(inner) // I am inside
+}
+showScope()
+// console.log(inner) // ← 取消注释会报错:inner is not defined(外面看不到里面)
+
+// ── 7. 函数当值传递(回调的雏形)⭐⭐ ──────────────
+// 把一个函数作为参数传给另一个函数
+const applyTwice = (fn, x) => fn(fn(x)) // fn 是"传进来的函数"
+const inc = (n) => n + 1
+console.log(applyTwice(inc, 5)) // 7   ← inc(inc(5)) = 7
+// 💡 pi 里注册工具、事件回调,本质就是这样"把函数传进去,框架来调用"
+
+// ═════════════════════ 轮到你 ═════════════════════
+// (只给要求,自己写代码)
+
+// 练习 A:写一个【函数声明】叫 double,接收一个数字,返回它的两倍。
+//   调用 double(8) 并打印(应为 16)
+
+// 练习 B:把练习 A 改写成【箭头函数】版本(单表达式、自动 return),
+//   存进 const doubleArrow,调用并打印
+
+// 练习 C:写一个箭头函数 greetUser(name),
+//   给 name 一个默认值 'guest',返回 `Hello, xxx`。
+//   分别在"传名字"和"不传"两种情况下调用并打印
+
+// 练习 D:写一个函数 max2(a, b),返回两个数里较大的那个。
+//   要求用到 return 提前结束(想想练习示范 5 的 firstPositive)。
+//   用 max2(3, 9) 和 max2(10, 2) 各测一次
+
+// 练习 E(动脑):下面这段为什么打印 undefined?先想再动手改好它,
+//   让它正确返回并打印 20。(提示:看 return)
+//   const triple = (n) => { n * 3 }
+//   console.log(triple(...))   ← 你来补,并修好 triple
+
+// 练习 F(挑战,连接下一章):写一个高阶函数 repeat(fn, times),
+//   它把传进来的函数 fn 连续调用 times 次(每次打印一句话即可)。
+//   例:repeat(() => console.log('hi'), 3) 应打印三行 hi。
+//   提示:times 次 → 用循环;fn 是"传进来的函数",直接 fn() 就能调用

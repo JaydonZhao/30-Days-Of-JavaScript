@@ -131,6 +131,33 @@ const student = {...} // ❌ Identifier 'student' has already been declared
 ```
 - **教训**:同作用域 `const` 不能重名;想留"错误对照"就**注释掉**旧的,别当活代码。
 
+## N. 以为"代码块能算出值、会自动返回"⭐⭐(概念推错,非手滑)
+
+📍来源:`../10-functions.js` 概念区第 2 节(箭头函数)
+```js
+const add = (a, b) => { a + b }   // ❌ 以为块算出 a+b 就会返回 → 实际返回 undefined
+const add = (a, b) => a + b       // ✅ 无 {}:右边是表达式(值),自动返回
+const add = (a, b) => { return a + b } // ✅ 有 {}:块里必须手写 return
+```
+- **现象**:函数默默返回 `undefined`,**不报错**(最难查)
+- **根源**:锚点是 **`=>` 右边期望一个「表达式」(能算出值的东西)**。
+  - 表达式(`a+b`)=【有值】→ 直接返回;能赋值 `const x = a+b` ✅
+  - 代码块(`{...}`)=【一堆动作,不产值】→ 不能赋值 `const x = {a+b}` ❌ 报错
+  - 所以 `{ a+b }` 里那个 `a+b` 被算出来**却被丢弃**,函数无 return → undefined
+- **教训**:别把"代码块"当"能出值的表达式"。**块不产值**,所以进了 `{}` 就必须自己 `return`。
+
+## O. 箭头函数返回对象忘加括号 ⭐
+
+📍来源:`../10-functions.js` 概念区第 2 节
+```js
+const make = (name) => { name: name }   // ❌ { 被当代码块,返回 undefined(不报错!)
+const make = (name) => ({ name: name }) // ✅ () 逼它当表达式 → 返回对象
+```
+- **现象**:想返回对象,却得到 `undefined`,且**不报错**
+- **根源**:对象字面量和代码块都以 `{` 开头,`=> {` 会被优先当**代码块**;
+  里面的 `name:` 又被当成**标签语句**(JS 给循环起名字的老语法,`名字:`),于是静默返回 undefined
+- **教训**:箭头函数**直接返回对象**,用 `()` 把对象裹起来,逼回"表达式"语境。
+
 ---
 
 ## 🔁 高频报错 → 秒查表
@@ -144,3 +171,4 @@ const student = {...} // ❌ Identifier 'student' has already been declared
 | 打印出 `[Function: xxx]` | 方法忘加 `()` | A |
 | 屏幕啥都没有 | 忘了 console.log / 没接住返回值 | D、E |
 | 从某行起全报错 | 引号没配对 | I |
+| 函数返回 `undefined`(不报错) | `{}` 里忘 return / 箭头返回对象没加 `()` | N、O |
