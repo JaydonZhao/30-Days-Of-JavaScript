@@ -251,15 +251,28 @@ console.log(triple(7))
 //   提示:times 次 → 用循环;fn 是"传进来的函数",直接 fn() 就能调用
 
 const fn = () => {console.log("执行一次fn函数")}
+
+// ❌ 最初版:把 repeat 和 fn 搞混,fn(fn, times-1) —— fn 不会递归,只执行一次
 // const repeat = (fn, times) => {
 //   if (times === 0) return
 //   return fn(fn, times -1)
 // }
+
+// ❌ 第二版:fn() 在前、判断在后 —— 能跑,但 repeat(fn, 0) 会先打印再停 = 打印 1 次(边界错)
+// const repeat = (fn, times) => {
+//   fn()
+//   times -= 1
+//   if (times === 0) return
+//   repeat(fn, times)
+// }
+
+// ✅ 终版:判断在前 → repeat(fn, 0) 直接返回,打印 0 次(边界正确)
 const repeat = (fn, times) => {
+  if (times === 0) return // 先判断:times 为 0 就不打印(edge case 处理对)
   fn()
   times-=1
-  if (times === 0) return
   // return repeat(fn, times)
-  repeat(fn, times)
+  repeat(fn, times) // 不需要 return 也行(不需要返回值)
 }
+
 repeat(fn, 3)

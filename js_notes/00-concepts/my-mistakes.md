@@ -124,12 +124,15 @@ describe: function () => {...}   // ❌ 语法错:function 和 => 不能同时�
 
 ## M. const 同名声明两次
 
-📍来源:`../07-objects/practice.js` 练习 D
+📍来源:`../07-objects/practice.js` 练习 D;又见 `../10-functions.js` 练习 F
 ```js
 const student = {...}
 const student = {...} // ❌ Identifier 'student' has already been declared
 ```
 - **教训**:同作用域 `const` 不能重名;想留"错误对照"就**注释掉**旧的,别当活代码。
+- **重演情境(10章F)**:迭代改进时【新写了一版更好的 `const repeat`,却忘了删/注释掉旧版】
+  → 两个活的 `const repeat` → 整个文件直接报错跑不了。
+  改进代码时:**旧版要么删,要么注释成 ❌ 对照,绝不能两个都当活代码**。
 
 ## N. 以为"代码块能算出值、会自动返回"⭐⭐(概念推错,非手滑)
 
