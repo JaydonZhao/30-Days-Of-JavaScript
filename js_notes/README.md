@@ -59,7 +59,7 @@
 
 ### 三、逻辑与函数(pi 前置 · 核心)
 - [x] `09-loops` 循环
-- [ ] `10-functions` 函数(声明/表达式、箭头、参数、返回、作用域)
+- [x] `10-functions` 函数(声明/表达式、箭头、参数、返回、作用域、提升/TDZ)
 - [ ] `11-higher-order-functions` 高阶函数 + 回调(map / filter / reduce)← 读 TS 必备
 - [ ] `12-destructuring-spread` 解构与展开 ← pi 源码里到处是,读代码前置
 - [ ] `13-closures` 闭包(理解 agent 状态、回调捕获)

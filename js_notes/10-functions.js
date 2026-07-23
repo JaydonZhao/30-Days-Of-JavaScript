@@ -21,6 +21,23 @@
 //   区别(初学先记一条):声明会被"提升"(hoisting),定义前就能调用;
 //   表达式不会,必须先定义后调用。现代代码更常用【表达式 + 箭头函数】。
 //
+//   ── 函数的"名字" vs 装它的"变量名" ⭐(易混,重点)──
+//   三种写法,分清"函数自己叫啥"和"你用哪个名字调用它":
+//     (1) const xxx = () => {}            // 箭头函数本体【匿名】,但赋值给 xxx 后,
+//                                         //   引擎自动把它 .name 推断成 'xxx'
+//                                         //   → 日常说"函数叫 xxx"没问题;调用用 xxx()
+//     (2) const xxx = function yyy() {}   // 【具名函数表达式】:函数自己叫 yyy,xxx 是变量
+//                                         //   xxx()  ✅ 用变量名调用
+//                                         //   yyy()  ❌ ReferenceError!yyy 只在函数【内部】可见
+//     (3) function yyy() {}               // 函数声明:函数就叫 yyy,直接 yyy() 调用(且会提升)
+//
+//   ⭐ 重点(2 里的坑与用途):yyy 这个名字【只在函数体内部能用】,外面看不到。
+//     那 yyy 有啥用?主要一个:让函数能在【内部调用自己(递归)】,顺便 debug 时显示名字。
+//     平时几乎不这么写,了解即可。
+//     💡 呼应练习 F:想用递归让 repeat 调用自己,靠的就是"函数有个内部能引用的名字"——
+//        函数声明 function repeat(){} 的 repeat、或具名表达式的名字,都能做到;
+//        而纯箭头 const repeat = () => {} 若要递归,只能靠外层变量名 repeat 引用自己。
+//
 //   ── 什么叫"提升(hoisting)"?⭐ ──
 //   一句话说透:JS 真正执行前,会先扫一遍代码,把某些声明"吊"到所在作用域的顶端。
 //   所以你能在"字面写的位置之前"就用到它。hoisting = 吊起、提起。
@@ -195,14 +212,16 @@ console.log(double(8))
 
 // 练习 B:把练习 A 改写成【箭头函数】版本(单表达式、自动 return),
 //   存进 const doubleArrow,调用并打印
-const doubleArrow = num * 2
+const doubleArrow = num => num * 2
+console.log(doubleArrow(8))
 
 
 // 练习 C:写一个箭头函数 greetUser(name),
 //   给 name 一个默认值 'guest',返回 `Hello, xxx`。
 //   分别在"传名字"和"不传"两种情况下调用并打印
-(name = 'guest') => `Hello, ${name}`
-
+const greetUser = (name = 'guest') => `Hello, ${name}`
+console.log(greetUser())
+console.log(greetUser("sample name"))
 
 // 练习 D:写一个函数 max2(a, b),返回两个数里较大的那个。
 //   要求用到 return 提前结束(想想练习示范 5 的 firstPositive)。
@@ -217,11 +236,14 @@ function max2(a, b) {
 
 
 // 练习 E(动脑):下面这段为什么打印 undefined?先想再动手改好它,
-//   让它正确返回并打印 20。(提示:看 return)
+//   让它正确返回并打印 triple(7)。(提示:看 return)
 //   const triple = (n) => { n * 3 }
 //   console.log(triple(...))   ← 你来补,并修好 triple
 const triple = (n) => {return n * 3 }
-console.log(triple(20/3))
+console.log(triple(7))
+
+
+
 
 // 练习 F(挑战,连接下一章):写一个高阶函数 repeat(fn, times),
 //   它把传进来的函数 fn 连续调用 times 次(每次打印一句话即可)。
@@ -229,7 +251,15 @@ console.log(triple(20/3))
 //   提示:times 次 → 用循环;fn 是"传进来的函数",直接 fn() 就能调用
 
 const fn = () => {console.log("执行一次fn函数")}
+// const repeat = (fn, times) => {
+//   if (times === 0) return
+//   return fn(fn, times -1)
+// }
 const repeat = (fn, times) => {
+  fn()
+  times-=1
   if (times === 0) return
-  return fn(fn, times -1)
+  // return repeat(fn, times)
+  repeat(fn, times)
 }
+repeat(fn, 3)
