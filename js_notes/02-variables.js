@@ -22,6 +22,9 @@
 //      const PI = 3.14   // 常量,不会变
 //      let count = 0     // 会变的用 let;count = count + 1 ✅
 //      // PI = 3.15      // ❌ 报错:const 不能重新赋值
+//    ⚠️ var 为啥"有坑"?一个典型:变量声明前就用它,var 会【静默给 undefined】
+//       把 bug 藏起来;而 const/let 会【当场报错】(TDZ),让你一眼发现。
+//       (详见 10-functions.js "提升 hoisting" 一节)
 //
 // 3. 变量命名规则 ⭐
 //    必须遵守(否则报错):
@@ -54,11 +57,37 @@
 //      typeof undefined // 'undefined'
 //    小坑:typeof null 会返回 'object',这是 JS 历史遗留 bug,记住即可。
 //
-// 6. undefined vs null
-//    - undefined:系统给的"还没值"。声明了没赋值就是它。
-//    - null:你主动给的"这里是空的"。
+//    ── 三个最爱混的值,typeof 都出人意料(速查)⭐⭐ ──
+//    ┌───────────┬──────────────┬────────────────────────────────────┐
+//    │ 值        │ typeof 结果  │ 一句话 + 坑                         │
+//    ├───────────┼──────────────┼────────────────────────────────────┤
+//    │ undefined │ 'undefined'  │ 系统给的"还没值";自成一个类型      │
+//    │ null      │ 'object' ⚠️  │ 你给的"空";typeof 说它 object 是坑 │
+//    │ NaN       │ 'number' ⚠️  │ 无效数字,属 number;NaN!==NaN 是坑 │
+//    └───────────┴──────────────┴────────────────────────────────────┘
+//    记:null 不是真 object(历史 bug);NaN 不是"不是数字",它就是 number。
+//    详见下方 §6(undefined vs null)、§7(NaN)。
+//
+// 6. undefined vs null ⭐
+//    两个都表示"没有",区别在【谁放的、是不是有意】:
+//    - undefined:系统给的"还没值"(默认状态)。像杯子你还没倒过。
+//    - null:你主动给的"这里【有意】空着"(刻意清空/占位)。像杯子你特意倒空并标记。
 //      let x; console.log(x)  // undefined  ← 没赋值,系统默认
 //      let y = null           // null       ← 你主动清空
+//      null === undefined     // false      ← 概念不同:一个"未设置",一个"设为空"
+//
+//    ── null 到底是什么?怎么理解 ⭐ ──
+//    null 是一个【独立的原始值】,自成一类,类里只有它一个成员;含义="有意的空"。
+//    • typeof null // 'object' ← 这是 1995 年的历史 bug(底层用全 0 表示,被误判)。
+//      全世界老代码都依赖它了,改了会崩,只好将错就错。→ null 不是对象,是原始值!
+//      (呼应 00-concepts/value-vs-reference.md:null 明列在"原始值"栏)
+//    • 怎么判断是不是 null?直接用 === 就行,可靠(不像 NaN 连自己都不等):
+//        if (x === null) { ... }   // ✅ null === null 成立
+//        // ❌ 别用 typeof x === 'object' 判 null:{}、[] 也是 'object',会误伤
+//    • 什么时候用:"这位置将来会有个对象,但现在还没有"→ 用 null 明确占位:
+//        let currentUser = null           // 还没登录,主动标记"当前无用户"
+//        currentUser = { name: 'Tom' }    // 登录后再填
+//      比放 undefined 更能表达"我【知道】这里暂时空,不是忘了"(agent 代码常见)。
 //
 // 7. NaN / Infinity 都属于 number ⭐
 //    NaN(Not a Number)名字唬人,但它自己的类型偏偏是 number ——
@@ -82,6 +111,7 @@
 //   2. 优先 const,要改才用 let,别用 var ⭐
 //   3. 命名:小驼峰、有意义、不能数字开头
 //   4. 常用类型:number / string / boolean,外加 undefined / null
+//      (null 是"有意的空",独立原始值;判断用 === null,typeof null==='object' 是坑)
 //   5. typeof 查类型(注意 typeof null === 'object' 是坑)
 //   6. NaN / Infinity 都属于 number;NaN !== NaN,判断用 Number.isNaN() ⭐
 
