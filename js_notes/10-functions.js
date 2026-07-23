@@ -21,6 +21,29 @@
 //   区别(初学先记一条):声明会被"提升"(hoisting),定义前就能调用;
 //   表达式不会,必须先定义后调用。现代代码更常用【表达式 + 箭头函数】。
 //
+//   ── 什么叫"提升(hoisting)"?⭐ ──
+//   一句话说透:JS 真正执行前,会先扫一遍代码,把某些声明"吊"到所在作用域的顶端。
+//   所以你能在"字面写的位置之前"就用到它。hoisting = 吊起、提起。
+//     • 函数声明 function f(){} → 【整个函数】(名字+函数体)被提到顶
+//         → 定义前调用 ✅ 能用
+//     • 函数表达式 const f = function(){} / 箭头 → 只有【变量名】被登记,
+//       "= 赋值"留在原地不动 → 定义前调用 ❌ 报错(见下)
+//
+//   ── "名字提了却不让碰",提它有啥用?⭐⭐(易困惑)──
+//   提升的用途【不是】让你提前用,而是另外两件事:
+//     用途一:一进作用域就把所有声明"登记"好 → "这个名字归本作用域"从第一行
+//            起就板上钉钉,不会前半段指外层、后半段指内层(名字归属一致)。
+//     用途二:const/let 提升后标记为"未初始化,禁止访问",这段区间叫
+//            【TDZ 暂时性死区】。你若在赋值前就用它 → 【当场报错】
+//            ReferenceError: Cannot access 'x' before initialization。
+//   对照老式 var:var 也提升,但预设值是 undefined → 提前用【静默给 undefined】,
+//   把 bug 藏起来。const/let 是在这个教训上改的:保留提升(用途一),
+//   但把"提前读到 undefined"升级成"提前读就报错"(用途二)。
+//   → 一句话:提升负责"提前登记名字",TDZ 负责"用早了就当场拦下"。
+//
+//   实用建议:别去利用提升在定义前调用函数(代码会难读)。养成"先定义后用"
+//   的习惯,提升对你就几乎无感 —— 而 const+箭头本来就必须先定义后用。
+//
 // ── 2. 箭头函数 => ⭐⭐(pi/TS 代码里到处是)────────
 //   const add = (a, b) => a + b             // 无 {}:自动 return
 //   const add = (a, b) => { return a + b }  // 有 {}:必须自己 return
@@ -39,7 +62,7 @@
 //     代码块只是"一堆动作",本身不产出值 → JS 不猜你要交啥 → 必须自己 return,否则返回 undefined。
 //   一句话:=> 后给"值(表达式)"就自动还;开了"{代码块}"就得自己 return。
 //
-//   ⚠️ 推论(同一锚点):对象字面量 { } 也以 { 开头 → 会撞上"代码块"这条特判!
+//   ⚠️ 由上面那句核心推出:对象字面量 { } 也以 { 开头 → 会撞上"代码块"这条特判!
 //     想直接返回对象,用 () 裹住,强行回到"表达式"语境:
 //       const make = (name) => { name: name }    // ❌ { 被当代码块 → 返回 undefined
 //       const make = (name) => ({ name: name })  // ✅ () 逼它当表达式 → 返回对象
@@ -96,6 +119,15 @@ const multiply = function (a, b) {
   return a * b
 }
 console.log(multiply(4, 5)) // 20
+
+// ── 2.5 提升 hoisting:声明能"提前用",表达式不能 ⭐ ──
+console.log(hoisted()) // works!  ← 在定义【上面】就调用,函数声明被整体提升,能用
+function hoisted() {
+  return 'works!'
+}
+// 对照:const/箭头是表达式,提前用会报错(TDZ)。取消注释验证:
+// console.log(notYet())            // ❌ ReferenceError: Cannot access 'notYet' before initialization
+// const notYet = () => 'nope'
 
 // ── 3. 箭头函数:三种写法,越来越短 ⭐ ─────────────
 const addArrow1 = (a, b) => {
@@ -156,24 +188,48 @@ console.log(applyTwice(inc, 5)) // 7   ← inc(inc(5)) = 7
 
 // 练习 A:写一个【函数声明】叫 double,接收一个数字,返回它的两倍。
 //   调用 double(8) 并打印(应为 16)
+function double(num) {
+  return num * 2
+}
+console.log(double(8))
 
 // 练习 B:把练习 A 改写成【箭头函数】版本(单表达式、自动 return),
 //   存进 const doubleArrow,调用并打印
+const doubleArrow = num * 2
+
 
 // 练习 C:写一个箭头函数 greetUser(name),
 //   给 name 一个默认值 'guest',返回 `Hello, xxx`。
 //   分别在"传名字"和"不传"两种情况下调用并打印
+(name = 'guest') => `Hello, ${name}`
+
 
 // 练习 D:写一个函数 max2(a, b),返回两个数里较大的那个。
 //   要求用到 return 提前结束(想想练习示范 5 的 firstPositive)。
 //   用 max2(3, 9) 和 max2(10, 2) 各测一次
+function max2(a, b) {
+  if ( a >= b) {
+    return a
+  }
+  return b
+}
+
+
 
 // 练习 E(动脑):下面这段为什么打印 undefined?先想再动手改好它,
 //   让它正确返回并打印 20。(提示:看 return)
 //   const triple = (n) => { n * 3 }
 //   console.log(triple(...))   ← 你来补,并修好 triple
+const triple = (n) => {return n * 3 }
+console.log(triple(20/3))
 
 // 练习 F(挑战,连接下一章):写一个高阶函数 repeat(fn, times),
 //   它把传进来的函数 fn 连续调用 times 次(每次打印一句话即可)。
 //   例:repeat(() => console.log('hi'), 3) 应打印三行 hi。
 //   提示:times 次 → 用循环;fn 是"传进来的函数",直接 fn() 就能调用
+
+const fn = () => {console.log("执行一次fn函数")}
+const repeat = (fn, times) => {
+  if (times === 0) return
+  return fn(fn, times -1)
+}
