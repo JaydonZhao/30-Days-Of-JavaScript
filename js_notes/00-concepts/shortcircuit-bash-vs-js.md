@@ -56,6 +56,22 @@ const result = readFile() || 'default'
 config && loadConfig()
 ```
 
+## ⚠️ 另一个差异:两边"能串什么"
+
+bash 的 `&&`/`||` 串的是**命令**(任意命令都行,`mkdir dir && cd dir`)。
+JS 的 `&&`/`||` 是**运算符**,两边只收**表达式**(有值的东西),不能塞【语句】:
+
+```js
+user && user.login()     // ✅ 函数调用是表达式,行(守卫)
+cache || compute()       // ✅ 兜底
+true && const x = 1      // ❌ SyntaxError:const 声明是【语句】
+true && if (a) {...}     // ❌ SyntaxError:if 是【语句】
+```
+
+→ 所以【不能】像 shell 那样用 `&&` 串任意语句块。要按条件跑一段带 if/for/多行的逻辑,
+就老老实实用 `if`;`&&`/`||` 只适合串"一个简短表达式"(一次函数调用、一个赋值)。
+(为什么?见 `expression-vs-statement.md`:运算符两边只接表达式。)
+
 ## ✅ 一句话
 
 > 短路逻辑 Linux 和 JS **一致**,惯用法也像(`||`兜底、`&&`守卫)。
