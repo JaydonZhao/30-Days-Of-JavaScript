@@ -40,6 +40,7 @@
 - `00-concepts/value-vs-reference.md` —— 值 vs 引用:复制 vs 共享、字符串不可变 ⭐
 - `00-concepts/shortcircuit-bash-vs-js.md` —— `&&`/`||`:bash vs JS(`0` 真假相反)
 - `00-concepts/semicolons-and-asi.md` —— 分号 `;` 什么时候【必须】写(ASI 的坑:行首 `(`/`[`、`return` 换行)⭐
+- `00-concepts/expression-vs-statement.md` —— 表达式 vs 语句:谁有值/能当值用(串起箭头 `=>`、三元、return)⭐
 
 ### 一、基础与数据
 - [x] `01-basics` 基础:输出、注释、表达式、字符串引号、运行方式
