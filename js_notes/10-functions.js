@@ -115,6 +115,24 @@
 //     [1,2,3].map(n => n * 2)   // 把箭头函数传给 map
 //   💡 这正是 agent/pi 的核心套路:注册一堆"工具函数",框架在合适时机回调它们。
 //
+//   ── 为什么函数还"有属性"?因为函数就是【可调用的对象】⭐ ──
+//   函数本质是【对象】(复习 07 章 §0),只是比普通对象多一个本事:能被 () 调用。
+//   既然是对象,"能挂键值对属性"就是它天生的能力:
+//     • 自带属性(不是你加的,存"关于函数自己的信息"):
+//         const greet = (a, b) => a + b
+//         greet.name    // 'greet'  ← 函数的名字(上次问"函数叫啥"就是读它)
+//         greet.length  // 2        ← 声明了几个参数
+//     • 你也能自己挂(因为它是对象)——让函数"随身带状态":
+//         function counter() { counter.callCount++ }
+//         counter.callCount = 0
+//         counter(); counter()      // counter.callCount 变成 2
+//   一条因果链把这几天的知识串起来 ⭐:
+//     函数是一等公民 → 所以它得是个【值(对象)】→ 所以能挂属性、能当参数传
+//     → 所以才有 map/filter/回调 这套玩法。根子都在"一等公民"这一句。
+//   💡 对比 Python:Python 函数【同样】是对象、是一等公民(__name__ 自带属性、
+//      也能挂自定义属性、能当参数传 map)。区别只在习惯:Python 给函数挂属性较少见,
+//      且更爱用【列表推导式 [n*2 for n in xs]】而非 map。底层道理一致,直觉可迁移。
+//
 // ═════ 要点回顾 ═════
 // 1. 两种写法:function 声明(会提升)/ const = function 表达式(不提升)
 // 2. 箭头函数 (a,b) => a+b:单表达式自动 return;没自己的 this ⭐⭐
@@ -122,6 +140,7 @@
 // 4. return 交出结果;不写 return 得 undefined;return 后别换行 ⭐
 // 5. 作用域:里能看外,外看不到里;let/const 是块级 ⭐
 // 6. 函数能当值传递 → 回调 / 高阶函数(下一章)⭐⭐
+//    根源:函数是"可调用的对象"→ 所以有属性(.name/.length)、能当参数;Python 同理
 //
 // ═════════════════════ 示范 ═════════════════════
 
@@ -276,3 +295,19 @@ const repeat = (fn, times) => {
 }
 
 repeat(fn, 3)
+
+
+// 函数也是对象:验证"赋值共享同一个"
+let x = fn
+let y = x // x、y 指向同一个函数对象(x === y 为 true)
+
+// ❌ 用 .name 验证共享会"看走眼":.name 是只读属性,这次赋值【静默失败】
+y.name = "修改y的name"
+console.log(x.name) // 'fn'  ← 没变!不是"没共享",是 .name 改不动(writable:false)
+
+// ✅ 用普通属性才验证到共享:改 y.foo,x.foo 立刻跟着变
+y.foo = "shared!"
+console.log(x.foo) // 'shared!'  ← 这才证明 x、y 是同一个对象
+
+// .name 为什么改不动?看它的属性描述:writable:false = 只读
+console.log(Object.getOwnPropertyDescriptor(x, "name")) // { value:'fn', writable:false, ... }
